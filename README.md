@@ -28,7 +28,16 @@ For banks, wealth managers, and外贸 firms in Shenzhen who need *real-time, com
 
 ## 🚀 Quickstart
 ### Option 1: Live Demo (GitHub Pages)
-👉 [https://PUYUAM.github.io/policyfx-trust](https://PUYUAM.github.io/policyfx-trust) *(auto-deployed)*
+👉 Your live dashboard will be at: `https://PUYUAM.github.io/policyfx-trust` *(enable in <30 seconds — see below)*
+
+#### 🔧 How to Enable GitHub Pages
+1. Go to your repo: [https://github.com/PUYUAM/policyfx-trust](https://github.com/PUYUAM/policyfx-trust)
+2. Click **Settings** → **Pages**
+3. Under "Build and deployment":
+   - Source → **Deploy from a branch**
+   - Branch → `main` / `ui/` folder
+4. Click **Save** → done! 🌐
+   → Your site will be live at `https://PUYUAM.github.io/policyfx-trust` in ~30 seconds.
 
 ### Option 2: Run Locally
 ```bash
