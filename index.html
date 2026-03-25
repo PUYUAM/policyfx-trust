@@ -9,81 +9,91 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif
         }
+
         body {
             background: #0a101f;
             color: #fff;
             min-height: 100vh;
-            padding: 2rem;
+            padding: 2rem
         }
+
         .container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 0 auto
         }
+
         header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2rem
         }
+
         h1 {
             font-size: 2.4rem;
             color: #4fc3f7;
-            margin-bottom: 0.5rem;
+            margin-bottom: .5rem
         }
+
         .subtitle {
             color: #a0aec0;
-            font-size: 1.1rem;
+            font-size: 1.1rem
         }
+
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
-            margin-top: 2rem;
+            margin-top: 2rem
         }
+
         .card {
             background: #121a29;
             padding: 1.8rem;
             border-radius: 16px;
             border: 1px solid #24304a;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .2)
         }
+
         .card h3 {
             font-size: 1.2rem;
             color: #cbd5e0;
-            margin-bottom: 1rem;
+            margin-bottom: 1rem
         }
+
         .score {
             font-size: 3rem;
-            font-weight: bold;
-            color: #10b981;
+            font-weight: 700;
+            color: #10b981
         }
+
         .info {
             color: #8899a8;
             margin-top: 1rem;
-            font-size: 0.95rem;
+            font-size: .95rem
         }
+
         footer {
             text-align: center;
             margin-top: 4rem;
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: .9rem
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>PolicyFX Trust</h1>
             <p class="subtitle">AI 驱动的政策风险量化与信任评估系统</p>
         </header>
-
         <div class="dashboard">
             <div class="card">
                 <h3>综合信任评分</h3>
                 <div class="score">7.232</div>
                 <div class="info">基于政策稳定性、合规性、地缘风险、ZKP 验证多方计算</div>
             </div>
-
             <div class="card">
                 <h3>最新更新</h3>
                 <div class="info" style="font-size:1rem;">2026-03-25</div>
@@ -91,7 +101,6 @@
             </div>
         </div>
     </div>
-
     <footer>
         © 2026 PolicyFX Trust | 开源 · 隐私 · 可信计算
     </footer>
