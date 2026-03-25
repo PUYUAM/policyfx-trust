@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./uptime-kuma-data:/app/data
+    restart: unless-stopped
+    environment:
+      - UPTIME_KUMA_DISABLE_UPDATES=true
+
+# To start: docker-compose -f monitoring/uptime-kuma-docker-compose.yml up -d
+# Dashboard: http://localhost:3001
