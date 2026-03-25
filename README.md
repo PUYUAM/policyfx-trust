@@ -4,7 +4,7 @@
 
 [![Deploy to GitHub](https://github.com/staticman-dot-net/badge.svg)](https://github.com/new?template_name=policyfx-trust&template_owner=PUYUAM)
 
-![GitHub Pages](https://img.shields.io/website?label=Demo&url=https%3A%2F%2FPUYUAM.github.io%2Fpolicyfx-trust)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Open-green?logo=github)](https://PUYUAM.github.io/policyfx-trust)
 ![License](https://img.shields.io/github/license/PUYUAM/policyfx-trust)
 ![Last Commit](https://img.shields.io/github/last-commit/PUYUAM/policyfx-trust)
 
