@@ -179,5 +179,17 @@
 
     main();
   </script>
+
+  <!-- Analytics (opt-in, privacy-first) -->
+  <script>
+    // Set ANALYTICS_ENABLED = true to activate
+    const ANALYTICS_ENABLED = false;
+    if (ANALYTICS_ENABLED) {
+      const s = document.createElement('script');
+      s.src = 'lib/analytics.js';
+      s.onload = () => policyfxAnalytics.trackDashboardView();
+      document.body.appendChild(s);
+    }
+  </script>
 </body>
 </html>
