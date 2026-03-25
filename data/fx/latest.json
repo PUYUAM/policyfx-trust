@@ -1,0 +1,9 @@
+{
+  "fetchedAt": "2026-03-25T02:13:46.000Z",
+  "sourceUrl": "https://api.exchangerate-api.com/v4/latest/USD",
+  "rate": 6.9,
+  "timestampUnix": 1774404866,
+  "timestampISO": "2026-03-25T02:14:26Z",
+  "ageMinutes": 0.7,
+  "status": "fresh"
+}

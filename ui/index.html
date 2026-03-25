@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Policy+FX Trust Dashboard</title>
+  <style>
+    :root { --green: #28a745; --yellow: #ffc107; --red: #dc3545; --gray: #6c757d; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 16px; background: #f8f9fa; color: #212529; }
+    .container { max-width: 960px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 24px; }
+    .status-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 24px; }
+    .status-indicator { display: inline-flex; align-items: center; font-weight: bold; margin-right: 8px; }
+    .status-indicator::before { content: ''; display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; }
+    .status-green::before { background: var(--green); }
+    .status-yellow::before { background: var(--yellow); }
+    .status-red::before { background: var(--red); }
+    .source-link { font-size: 0.85em; color: var(--gray); margin-top: 8px; display: block; }
+    .source-link a { color: #007bff; text-decoration: none; }
+    .source-link a:hover { text-decoration: underline; }
+    .age-badge { font-size: 0.75em; padding: 2px 8px; border-radius: 4px; background: #e9ecef; color: var(--gray); margin-left: 4px; }
+    .stale { background: #fff3cd; color: #856404; }
+    .watermark { text-align: center; margin-top: 32px; font-size: 0.8em; color: #6c757d; }
+    .loading { color: var(--gray); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🇨🇳 Policy + FX Trust Dashboard</h1>
+      <p>Real-time央行政策 & USD/CNY monitoring — audit-ready, embeddable, zero maintenance</p>
+    </div>
+
+    <div class="status-card">
+      <h2>🚦 Policy + FX Signal</h2>
+      <div id="signal" class="status-indicator loading">Loading...</div>
+      <div id="signal-reason"></div>
+      <div class="source-link">
+        Data sources: 
+        <a href="https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/index.html" target="_blank">PBOC News</a> | 
+        <a href="https://api.exchangerate-api.com/v4/latest/USD" target="_blank">ExchangeRate-API</a>
+      </div>
+    </div>
+
+    <div class="status-card">
+      <h2>📰 Latest PBOC Policy</h2>
+      <div id="policy-title">—</div>
+      <div id="policy-date">—</div>
+      <div id="policy-source" class="source-link"></div>
+    </div>
+
+    <div class="status-card">
+      <h2>💱 USD/CNY Spot</h2>
+      <div id="fx-rate">—</div>
+      <div id="fx-change">—</div>
+      <div id="fx-source" class="source-link"></div>
+    </div>
+
+    <div class="watermark">
+      Powered by OpenClaw • Audit-ready v0.1 • <span id="last-updated">Last updated: —</span>
+    </div>
+  </div>
+
+  <script>
+    async function loadJSON(path) {
+      try {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        return await res.json();
+      } catch (e) {
+        console.warn(`Failed to load ${path}:`, e);
+        return null;
+      }
+    }
+
+    function formatAge(seconds) {
+      if (seconds < 60) return `${Math.round(seconds)}s ago`;
+      if (seconds < 3600) return `${Math.round(seconds / 60)}m ago`;
+      return `${Math.round(seconds / 3600)}h ago`;
+    }
+
+    function renderStatus() {
+      const now = Date.now();
+      const policy = JSON.parse(document.getElementById('policy-data').textContent);
+      const fx = JSON.parse(document.getElementById('fx-data').textContent);
+
+      let signalClass = 'status-red';
+      let signalText = '🔴 RED — Critical risk';
+      let reason = '';
+
+      // Your A股 framework logic
+      if (fx && fx.rate && fx.rate <= 7.20) {
+        if (policy && policy.status === 'fresh') {
+          signalClass = 'status-green';
+          signalText = '✅ GREEN — Safe to monitor';
+          reason = '✓ USD/CNY ≤ 7.20 & PBOC policy fresh';
+        } else {
+          signalClass = 'status-yellow';
+          signalText = '🟡 YELLOW — Policy data stale';
+          reason = `⚠️ PBOC data ${policy?.ageMinutes || '?'}m old — verify manually`;
+        }
+      } else if (fx && fx.rate && fx.rate > 7.35) {
+        signalClass = 'status-red';
+        signalText = '🔴 RED — Immediate risk';
+        reason = `✗ USD/CNY = ${fx.rate} > 7.35`; 
+      } else {
+        signalClass = 'status-yellow';
+        signalText = '🟡 YELLOW — Watch zone';
+        reason = `⚠️ USD/CNY = ${fx.rate} (7.20–7.35)`;
+      }
+
+      document.getElementById('signal').className = `status-indicator ${signalClass}`;
+      document.getElementById('signal').textContent = signalText;
+      document.getElementById('signal-reason').textContent = reason;
+    }
+
+    async function main() {
+      const [policy, fx] = await Promise.all([
+        loadJSON('data/policy/latest.json'),
+        loadJSON('data/fx/latest.json')
+      ]);
+
+      // Inject data as script tags (safe, no CSP issues)
+      document.body.insertAdjacentHTML('beforeend', `
+        <script type="application/json" id="policy-data">${JSON.stringify(policy || {})}</script>
+        <script type="application/json" id="fx-data">${JSON.stringify(fx || {})}</script>
+      `);
+
+      // Render
+      if (policy) {
+        document.getElementById('policy-title').textContent = policy.latestValid?.title || '—';
+        document.getElementById('policy-date').textContent = policy.latestValid?.date || '—';
+        document.getElementById('policy-source').innerHTML = 
+          `Source: <a href="${policy.sourceUrl}" target="_blank">PBOC News</a>` +
+          (policy.latestValid?.url ? ` | <a href="${policy.latestValid.url}" target="_blank">Full notice</a>` : '');
+      }
+
+      if (fx) {
+        document.getElementById('fx-rate').textContent = `USD/CNY = ${fx.rate}`;
+        document.getElementById('fx-change').textContent = `Updated ${formatAge((now - new Date(fx.timestampISO).getTime()) / 1000)}`;
+        document.getElementById('fx-source').innerHTML = 
+          `Source: <a href="${fx.sourceUrl}" target="_blank">ExchangeRate-API</a>`;
+      }
+
+      document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleString()}`;
+      renderStatus();
+    }
+
+    main();
+  </script>
+</body>
+</html>

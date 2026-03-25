@@ -1,0 +1,14 @@
+{
+  "fetchedAt": "2026-03-25T02:08:51.433Z",
+  "sourceUrl": "https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/index.html",
+  "status": "no_match_today",
+  "latestValid": {
+    "title": "中国人民银行、国家外汇管理局有关部门负责人就《关于印发〈境内企业境外放款管理办法〉的通知》答记者问",
+    "date": "2026-03-20",
+    "url": "https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026032015493233391/index.html",
+    "confidence": "low",
+    "reason": "mentions 'foreign exchange management' but no RRR keywords"
+  },
+  "fallbackStrategy": "scan /zhengcehuobisi/125207/125213/125434/125798/next.html for updated RRR page (page 2 of archive)",
+  "nextCheckInHours": 2
+}
