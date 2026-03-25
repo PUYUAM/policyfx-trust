@@ -41,7 +41,7 @@ try:
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f"*Rate:* {rate:.3f} (threshold: {ALERT_THRESHOLD})\n*Time:* {now}\n*Source:* <{fx.get('sourceUrl', '#')|PBOC/ExchangeRate-API>"
+                        "text": f"*Rate:* {rate:.3f} (threshold: {ALERT_THRESHOLD})\n*Time:* {now}\n*Source:* <{fx.get('sourceUrl', '#')}> PBOC/ExchangeRate-API"
                     }
                 },
                 {
