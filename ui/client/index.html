@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Policy+FX Dashboard</title>
+  <link rel="stylesheet" href="client.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="icons/logo.png" alt="Your Logo" width="120" style="margin-bottom: 16px;">
+      <h1>Your Policy+FX Dashboard</h1>
+      <p>Real-time央行政策 & USD/CNY monitoring — trusted, simple, secure</p>
+    </header>
+
+    <div class="status-card">
+      <h2>🚦 Real-Time Status</h2>
+      <div id="signal" class="status-indicator loading">Loading...</div>
+      <div id="signal-reason"></div>
+    </div>
+
+    <div class="grid">
+      <div class="metric-card">
+        <h3>💱 USD/CNY Spot</h3>
+        <div id="fx-rate">—</div>
+        <div id="fx-change">—</div>
+      </div>
+      <div class="metric-card">
+        <h3>📈 Shanghai Composite</h3>
+        <div id="shcomp-rate">—</div>
+        <div id="shcomp-change">—</div>
+      </div>
+      <div class="metric-card">
+        <h3>📰 Latest PBOC Policy</h3>
+        <div id="policy-title">—</div>
+        <div id="policy-date">—</div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Powered by OpenClaw • <a href="https://PUYUAM.github.io/policyfx-trust">Full dashboard</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // Load data from same files as main dashboard
+    async function loadJSON(path) {
+      try {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        return await res.json();
+      } catch (e) {
+        console.warn(`Failed to load ${path}:`, e);
+        return null;
+      }
+    }
+
+    function renderStatus() {
+      const fx = JSON.parse(document.getElementById('fx-data').textContent);
+      const shcomp = JSON.parse(document.getElementById('shcomp-data').textContent);
+      const policy = JSON.parse(document.getElementById('policy-data').textContent);
+
+      let signalClass = 'status-red';
+      let signalText = '🔴 RED — Critical risk';
+      let reason = '';
+
+      if (fx && fx.rate && fx.rate <= 7.20) {
+        signalClass = 'status-green';
+        signalText = '✅ GREEN — Safe to monitor';
+        reason = '✓ USD/CNY ≤ 7.20';
+      } else if (fx && fx.rate && fx.rate > 7.35) {
+        signalClass = 'status-red';
+        signalText = '🔴 RED — Immediate risk';
+        reason = `✗ USD/CNY = ${fx.rate} > 7.35`; 
+      } else {
+        signalClass = 'status-yellow';
+        signalText = '🟡 YELLOW — Watch zone';
+        reason = `⚠️ USD/CNY = ${fx.rate} (7.20–7.35)`;
+      }
+
+      document.getElementById('signal').className = `status-indicator ${signalClass}`;
+      document.getElementById('signal').textContent = signalText;
+      document.getElementById('signal-reason').textContent = reason;
+
+      if (fx) {
+        document.getElementById('fx-rate').textContent = `USD/CNY = ${fx.rate}`;
+        document.getElementById('fx-change').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+      }
+      if (shcomp) {
+        document.getElementById('shcomp-rate').textContent = `SHCOMP = ${shcomp.index}`;
+        document.getElementById('shcomp-change').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+      }
+      if (policy) {
+        document.getElementById('policy-title').textContent = policy.latestValid?.title || '—';
+        document.getElementById('policy-date').textContent = policy.latestValid?.date || '—';
+      }
+    }
+
+    async function main() {
+      const [policy, fx, shcomp] = await Promise.all([
+        loadJSON('../data/policy/latest.json'),
+        loadJSON('../data/fx/latest.json'),
+        loadJSON('../data/shanghai/latest.json')
+      ]);
+
+      // Inject data as script tags (safe)
+      document.body.insertAdjacentHTML('beforeend', `
+        <script type="application/json" id="policy-data">${JSON.stringify(policy || {})}</script>
+        <script type="application/json" id="fx-data">${JSON.stringify(fx || {})}</script>
+        <script type="application/json" id="shcomp-data">${JSON.stringify(shcomp || {})}</script>
+      `);
+
+      renderStatus();
+    }
+
+    main();
+  </script>
+</body>
+</html>
