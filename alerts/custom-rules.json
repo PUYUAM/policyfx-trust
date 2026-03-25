@@ -1,0 +1,12 @@
+{
+  "usd_cny_and_shcomp": {
+    "condition": "fx.rate > 7.30 and shcomp.index < 2900",
+    "message": "⚠️ FX + SHCOMP confluence risk: USD/CNY high & market weak",
+    "channel": ["telegram", "whatsapp"]
+  },
+  "pboc_cut_plus_fx_stable": {
+    "condition": "policy.latestValid and '下调' in policy.latestValid.title and fx.rate <= 7.20",
+    "message": "✅ Policy tailwind: RRR cut confirmed & FX stable",
+    "channel": ["telegram", "whatsapp"]
+  }
+}
