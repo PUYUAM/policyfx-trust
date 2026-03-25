@@ -1,3 +1,4 @@
 [ERROR] 2026-03-25T10:40:47.076944 | can't subtract offset-naive and offset-aware datetimes
 ✅ OK: SHCOMP = 3025.4 ≥ 2750 (or stale: 2m old)
 ✅ OK: SHCOMP = 3025.4 ≥ 2750 (or stale: 17m old)
+✅ OK: SHCOMP = 3025.4 ≥ 2750 (or stale: 32m old)
