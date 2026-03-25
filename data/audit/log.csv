@@ -4,3 +4,4 @@ timestamp,url,status,age_seconds,error
 2026-03-25T11:35:06.832249,data/fx/latest.json,cache_hit,-26163.873304,
 2026-03-25T11:46:16.917506,https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/index.html,success,0,
 2026-03-25T11:46:16.919627,https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/index.html,parse_error,0,Expecting value: line 1 column 1 (char 0)
+2026-03-25T13:22:43.999543,data/fx/latest.json,cache_hit,-19706.706003,
