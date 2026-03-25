@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# alerts/fx-red-alert.py — Fire Slack alert when USD/CNY breaches 7.35
+# alerts/fx-red-alert.py - Fire Slack alert when USD/CNY breaches 7.35
 
 import json
 import os
@@ -25,13 +25,13 @@ if not os.path.exists(FX_DATA_PATH):
 try:
     with open(FX_DATA_PATH, 'r') as f:
         fx = json.load(f)
-    
-    if 'rate' not in fx:
-        print(f"⚠️  No 'rate' in {FX_DATA_PATH}")
+
+    if 'rates' not in fx or 'CNY' not in fx['rates']:
+        print(f"⚠️  No 'rates.CNY' in {FX_DATA_PATH}")
         sys.exit(0)
-    
-    rate = float(fx['rate'])
-    
+
+    rate = float(fx['rates']['CNY'])
+
     if rate > ALERT_THRESHOLD:
         # Build alert
         now = datetime.now().isoformat()
@@ -56,7 +56,7 @@ try:
                 }
             ]
         }
-        
+
         # Send
         if SLACK_WEBHOOK_URL == 'YOUR_SLACK_WEBHOOK_URL_HERE':
             log_msg = f"[CONFIG ERROR] {now} | Slack webhook URL not configured. Set SLACK_WEBHOOK_URL environment variable."
@@ -64,21 +64,21 @@ try:
             with open(LOG_PATH, 'a') as f:
                 f.write(log_msg + '\n')
             sys.exit(1)
-        
+
         res = requests.post(SLACK_WEBHOOK_URL, json=msg, timeout=10)
         if res.status_code == 200:
             log_msg = f"[OK] {now} | {rate:.3f} > {ALERT_THRESHOLD} → Slack alert sent"
         else:
             log_msg = f"[FAIL] {now} | Slack API error {res.status_code}: {res.text[:100]}"
-        
+
         # Log
         with open(LOG_PATH, 'a') as f:
             f.write(log_msg + '\n')
-        
+
         print(log_msg)
     else:
         print(f"✅ OK: {rate:.3f} ≤ {ALERT_THRESHOLD}")
-        
+
 except Exception as e:
     err_msg = f"[ERROR] {datetime.now().isoformat()} | {str(e)}"
     with open(LOG_PATH, 'a') as f:
