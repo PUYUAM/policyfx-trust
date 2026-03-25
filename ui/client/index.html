@@ -9,7 +9,7 @@
 <body>
   <div class="container">
     <header>
-      <img src="icons/logo.png" alt="Your Logo" width="120" style="margin-bottom: 16px;">
+      <img src="icons/logo.png" alt="Policy+FX Logo" width="120" style="margin-bottom: 16px;">
       <h1>Your Policy+FX Dashboard</h1>
       <p>Real-time央行政策 & USD/CNY monitoring — trusted, simple, secure</p>
     </header>
@@ -44,7 +44,7 @@
   </div>
 
   <script>
-    // Load data from same files as main dashboard
+    // Load data from local ./data/ folder
     async function loadJSON(path) {
       try {
         const res = await fetch(path);
@@ -99,12 +99,12 @@
 
     async function main() {
       const [policy, fx, shcomp] = await Promise.all([
-        loadJSON('../data/policy/latest.json'),
-        loadJSON('../data/fx/latest.json'),
-        loadJSON('../data/shanghai/latest.json')
+        loadJSON('data/policy/latest.json'),
+        loadJSON('data/fx/latest.json'),
+        loadJSON('data/shanghai/latest.json')
       ]);
 
-      // Inject data as script tags (safe)
+      // Inject data as script tags
       document.body.insertAdjacentHTML('beforeend', `
         <script type="application/json" id="policy-data">${JSON.stringify(policy || {})}</script>
         <script type="application/json" id="fx-data">${JSON.stringify(fx || {})}</script>
