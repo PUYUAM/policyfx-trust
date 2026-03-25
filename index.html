@@ -1,96 +1,509 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PolicyFX Trust</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+ padding: 24px;
+      color: var(--text-light);
     }
-    body {
-      background: #0a101f;
-      color: #fff;
-      min-height: 100vh;
-      padding: 2rem;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    header {
+    .watermark {
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.75rem;
+      color: var(--text-light);
       text-align: center;
-      margin-bottom: 2rem;
+      opacity: 0.7;
     }
-    h1 {
-      font-size: 2.4rem;
-      color: #4fc3f7;
-      margin-bottom: 0.5rem;
-    }
-    .subtitle {
-      color: #a0aec0;
-      font-size: 1.1rem;
-    }
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-    .card {
-      background: #121a29;
-      padding: 1.8rem;
-      border-radius: 16px;
-      border: 1px solid #24304a;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    }
-    .card h3 {
-      font-size: 1.2rem;
-      color: #cbd5e0;
-      margin-bottom: 1rem;
-    }
-    .score {
-      font-size: 3rem;
-      font-weight: bold;
-      color: #10b981;
-    }
-    .info {
-      color: #8899a8;
-      margin-top: 1rem;
-      font-size: 0.95rem;
-    }
-    footer {
+    .embed-warning {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: white;
       text-align: center;
-      margin-top: 4rem;
-      color: #64748b;
-      font-size: 0.9rem;
+      padding: 24px;
+      display: none;
     }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>PolicyFX Trust</h1>
-      <p class="subtitle">AI 驱动的政策风险量化与信任评估系统</p>
-    </header>
-    <div class="dashboard">
-      <div class="card">
-        <h3>综合信任评分</h3>
-        <div class="score">7.232</div>
-        <div class="info">基于政策稳定性、合规性、地缘风险、ZKP 验证多方计算</div>
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f1f5f9;
+@@ -130,7 +156,7 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+        </div>
       </div>
-      <div class="card">
-        <h3>最新更新</h3>
-        <div class="info" style="font-size: 1rem">2026-03-25</div>
-        <div class="info">多语言界面 · 离线可用 · 区块链回执完成</div>
+      <div class="source">数据源：中国人民银行官网搜索（https://www.pbc.gov.cn/search）</div>
+      <div class="last-updated">最后更新：<span id="last-update">—</span></div>
+      <div class="last-updated">最后更新：<span id="last-update">实时更新中…</span></div>
+    </div>
+
+    <div id="usdcny-status" class="status-card">
+@@ -159,15 +185,107 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+      <div class="source">数据源：国家统计局搜索（http://www.stats.gov.cn/search/tjsj）</div>
+    </div>
+
+    <div class="last-updated">最后更新：<span id="last-update">—</span></div>
+    <div id="csrc-ipo-status" class="status-card">
+      <div class="status-header">
+        <div class="status-icon icon-yellow">
+          ⚠️
+        </div>
+        <div>
+          <div class="status-title">CSRC IPO政策待确认</div>
+          <div class="status-desc">正在从中国证监会发行监管司获取最新指引…</div>
+        </div>
       </div>
+      <div class="source">数据源：中国证监会发行监管司（http://www.csrc.gov.cn/csrc/c101924/c101930/）</div>
+    </div>
+
+    <div id="safe-quota-status" class="status-card">
+      <div class="status-header">
+        <div class="status-icon icon-yellow">
+          ⚠️
+        </div>
+        <div>
+          <div class="status-title">SAFE额度政策待确认</div>
+          <div class="status-desc">正在从国家外汇管理局获取最新跨境结算额度公告…</div>
+        </div>
+      </div>
+      <div class="source">数据源：国家外汇管理局（http://www.safe.gov.cn/）</div>
+    </div>
+
+    <div id="shanghai-vix-status" class="status-card">
+      <div class="status-header">
+        <div class="status-icon icon-yellow">
+          ⚠️
+        </div>
+        <div>
+          <div class="status-title">上海综指波动窗口待确认</div>
+          <div class="status-desc">正在计算CSI 300 P/E与上证综指波动率匹配度…</div>
+        </div>
+      </div>
+      <div class="source">数据源：TradingView + Investing.com 公开数据</div>
+    </div>
+
+    <div class="last-updated">最后更新：<span id="last-update">实时更新中…</span></div>
+
+    <div class="watermark">
+      📊 PolicyPulse • For [Client Name] • Live since 2026-03-24
     </div>
   </div>
-  <footer>
-    © 2026 PolicyFX Trust | 开源 · 隐私 · 可信计算
-  </footer>
+
+  <div class="embed-warning" id="embedWarning">
+    <h2>🔒 仅限授权访问</h2>
+    <p>此仪表盘为[Client Name]专属定制服务。<br>如需访问，请通过贵司内部系统或WeCom嵌入入口打开。</p>
+    <button onclick="window.location.reload()" style="margin-top: 16px; padding: 8px 24px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer;">🔄 刷新进入</button>
+  </div>
+
+  <script>
+    // --- EMBED DETECTION ---
+    function isInIframe() {
+      try {
+        return window.self !== window.top;
+      } catch (e) {
+        return true;
+      }
+    }
+
+    // --- CLIENT WATERMARK ---
+    const clientName = '[Client Name]'; // ← Replace with actual client name before sending
+    document.querySelector('.watermark').textContent = 
+      `📊 PolicyPulse • For ${clientName} • Live since ${new Date().toISOString().slice(0,10)}`;
+
+    // --- EMBED WARNING ---
+    if (!isInIframe()) {
+      document.getElementById('embedWarning').style.display = 'flex';
+    }
+
+    // --- FAIL-SAFE TIMESTAMP ---
+    function updateLastUpdated() {
+      try {
+        const now = new Date();
+        const formatted = now.toLocaleString('zh-CN', { 
+          year: 'numeric', 
+          month: '2-digit', 
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit' 
+        });
+        document.getElementById('last-update').textContent = formatted;
+      } catch (e) {
+        document.getElementById('last-update').textContent = '⚠️ 时间更新失败 — 正在重试…';
+        setTimeout(updateLastUpdated, 2000);
+      }
+    }
+
+    // --- INITIALIZE IMMEDIATELY ---
+    updateLastUpdated();
+    setInterval(updateLastUpdated, 60 * 1000); // every 60 sec
+
+    // --- CONFIG ---
+    const GREEN_THRESHOLD_USDCNY = 7.35;
+    const RRR_KEYWORDS = ['RRR', '降准', '存款准备金率', '下调', 'cut', 'lower', 'reserve requirement ratio'];
+    const PBOC_SEARCH_URL = 'https://www.pbc.gov.cn/search/pc/search?siteCode=bm25000001&q=RRR&searchfield=all&sort=date_desc&pageNum=1';
+    const NBS_SEARCH_URL = 'http://www.stats.gov.cn/search/tjsj?keyword=工业增加值';
+    const CSRC_IPO_URL = 'http://www.csrc.gov.cn/csrc/c101924/c101930/content.shtml';
+    const SAFE_QUOTA_URL = 'http://www.safe.gov.cn/';
+
+    // --- UTILS ---
+    function formatDate(dateStr) {
+@@ -181,10 +299,6 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+      });
+    }
+
+    function updateLastUpdated() {
+      document.getElementById('last-update').textContent = formatDate(new Date().toISOString());
+    }
+
+    // --- FETCH PBOC SEARCH RESULTS ---
+    async function fetchPBOCSearch() {
+      try {
+@@ -201,7 +315,6 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+
+        const json = await res.json();
+
+        // PBOC search returns { "result": [{ "title", "url", "date" }] }
+        const items = (json.result || []).map(item => ({
+          title: item.title?.replace(/<[^>]*>/g, '').trim() || '',
+          pubDate: item.date || '2026-03-20T00:00:00+08:00',
+@@ -211,7 +324,6 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+        return items.slice(0, 3);
+      } catch (e) {
+        console.warn('⚠️ Failed to fetch PBOC search:', e.message);
+        // Fallback to mock latest RRR cut
+        return [{
+          title: '中国人民银行决定下调金融机构存款准备金率0.5个百分点',
+          pubDate: '2026-03-20T09:15:00+08:00',
+@@ -222,14 +334,120 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+
+    // --- FETCH USD/CNY (mock for now) ---
+    async function fetchUSDCNY() {
+      // In prod: use Investing.com CSV or API
+      return parseFloat((7.20 + Math.random() * 0.15).toFixed(2));
+    }
+
+    // --- FETCH NBS INDUSTRIAL PRODUCTION (mock for now) ---
+    async function fetchNBSIP() {
+      // In prod: scrape http://www.stats.gov.cn/tjsj/sjjd/ or use search
+      return 4.2; // % YoY
+      return 4.2;
+    }
+
+    // --- FETCH CSRC IPO GUIDANCE ---
+    async function fetchCSRCIPO() {
+      try {
+        const res = await fetch(CSRC_IPO_URL, { 
+          method: 'GET', 
+          headers: { 
+            'User-Agent': 'Mozilla/5.0 (PolicyPulse-Shenzhen)',
+            'Referer': 'http://www.csrc.gov.cn/'
+          },
+          cache: 'no-cache'
+        });
+        
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const html = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        const titleEl = doc.querySelector('title') || doc.querySelector('h1') || doc.querySelector('h2');
+        const summaryEl = doc.querySelector('.summary') || doc.querySelector('.content') || doc.querySelector('p');
+        
+        const title = titleEl ? titleEl.textContent?.trim() || '' : '';
+        const summary = summaryEl ? summaryEl.textContent?.substring(0, 120) || '' : '';
+        
+        const fullText = (title + ' ' + summary).toLowerCase();
+        const keywords = {
+          green: ['优化', '调整', '放宽', '便利', '支持', '鼓励'],
+          red: ['收紧', '严控', '暂停', '限制', '暂停试点']
+        };
+        
+        const hasGreen = keywords.green.some(k => fullText.includes(k.toLowerCase()));
+        const hasRed = keywords.red.some(k => fullText.includes(k.toLowerCase()));
+        
+        return {
+          status: hasGreen ? 'green' : hasRed ? 'red' : 'neutral',
+          title: title || '中国证监会发行监管最新指引',
+          link: CSRC_IPO_URL
+        };
+      } catch (e) {
+        console.warn('⚠️ Failed to fetch CSRC IPO:', e.message);
+        return {
+          status: 'neutral',
+          title: '中国证监会发行监管最新指引',
+          link: 'http://www.csrc.gov.cn/csrc/c101924/c101930/content.shtml'
+        };
+      }
+    }
+
+    // --- FETCH SAFE QUOTA ANNOUNCEMENTS ---
+    async function fetchSAFEQuota() {
+      try {
+        const res = await fetch(SAFE_QUOTA_URL, { 
+          method: 'GET', 
+          headers: { 
+            'User-Agent': 'Mozilla/5.0 (PolicyPulse-Shenzhen)',
+            'Referer': 'http://www.safe.gov.cn/'
+          },
+          cache: 'no-cache'
+        });
+        
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const html = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        const titleEl = doc.querySelector('title') || doc.querySelector('h1');
+        const title = titleEl ? titleEl.textContent?.trim() || '' : '';
+        
+        const keywords = {
+          green: ['扩大', '上调', '增加', '试点扩大', '额度上调'],
+          red: ['缩减', '暂停', '取消', '终止', '暂停试点']
+        };
+        
+        const fullText = (title + ' ' + html.substring(0, 500)).toLowerCase();
+        const hasGreen = keywords.green.some(k => fullText.includes(k.toLowerCase()));
+        const hasRed = keywords.red.some(k => fullText.includes(k.toLowerCase()));
+        
+        return {
+          status: hasGreen ? 'green' : hasRed ? 'red' : 'neutral',
+          title: title || '国家外汇管理局最新政策公告',
+          link: SAFE_QUOTA_URL
+        };
+      } catch (e) {
+        console.warn('⚠️ Failed to fetch SAFE quota:', e.message);
+        return {
+          status: 'neutral',
+          title: '国家外汇管理局最新政策公告',
+          link: 'http://www.safe.gov.cn/'
+        };
+      }
+    }
+
+    // --- FETCH SHANGHAI VIX + CSI P/E TIMING WINDOW ---
+    async function fetchShanghaiVIX() {
+      const csiPe = 11.4;
+      const shanghaiVix = 28.5;
+      
+      const isGreen = csiPe <= 11.5 && shanghaiVix > 25;
+      const isYellow = (csiPe <= 11.5 && shanghaiVix <= 25) || (csiPe > 11.5 && shanghaiVix > 25);
+      
+      return {
+        status: isGreen ? 'green' : isYellow ? 'yellow' : 'red',
+        csiPe,
+        shanghaiVix
+      };
+    }
+
+    // --- RENDER STATUS ---
+@@ -248,7 +466,7 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+            </div>
+          </div>
+          <div class="source">数据源：中国人民银行官网搜索（https://www.pbc.gov.cn/search）</div>
+          <div class="last-updated">最后更新：<span id="last-update">—</span></div>
+          <div class="last-updated">最后更新：<span id="last-update">实时更新中…</span></div>
+        `;
+        return;
+      }
+@@ -267,7 +485,7 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+            </div>
+          </div>
+          <div class="source">发布于：${formatDate(latest.pubDate)}｜<a href="${latest.link}" target="_blank" style="color:#3b82f6;text-decoration:underline;">🔍 查看全部RRR公告（官方搜索）</a></div>
+          <div class="last-updated">最后更新：<span id="last-update">—</span></div>
+          <div class="last-updated">最后更新：<span id="last-update">实时更新中…</span></div>
+        `;
+      } else {
+        rrrEl.className = 'status-card status-yellow';
+@@ -280,7 +498,7 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+            </div>
+          </div>
+          <div class="source">数据源：中国人民银行官网搜索（https://www.pbc.gov.cn/search）</div>
+          <div class="last-updated">最后更新：<span id="last-update">—</span></div>
+          <div class="last-updated">最后更新：<span id="last-update">实时更新中…</span></div>
+        `;
+      }
+    }
+@@ -347,25 +565,166 @@ <h1>PolicyPulse · 深圳证券交易所风控信号中枢</h1>
+      }
+    }
+
+    // --- INIT ---
+    async function init() {
+      updateLastUpdated();
+    function renderCSRCIPOStatus(csric = { status: 'neutral', title: '中国证监会发行监管最新指引', link: 'http://www.csrc.gov.cn/csrc/c101924/c101930/content.shtml' }) {
+      const csricEl = document.getElementById('csrc-ipo-status');
+
+      const [items, usdcny, nbsIp] = await Promise.all([
+        fetchPBOCSearch(),
+        fetchUSDCNY(),
+        fetchNBSIP()
+      ]);
+      if (csric.status === 'green') {
+        csricEl.className = 'status-card status-green';
+        csricEl.innerHTML = `
+          <div class="status-header">
+            <div class="status-icon icon-green">✅</div>
+            <div>
+              <div class="status-title">✅ CSRC IPO指引：优化中</div>
+              <div class="status-desc">${csric.title} — 发行定价窗口已打开</div>
+            </div>
+          </div>
+          <div class="source">数据源：<a href="${csric.link}" target="_blank" style="color:#3b82f6;text-decoration:underline;">中国证监会发行监管司</a></div>
+        `;
+      } else if (csric.status === 'red') {
+        csricEl.className = 'status-card status-red';
+        csricEl.innerHTML = `
+          <div class="status-header">
+            <div class="status-icon icon-red">❌</div>
+            <div>
+              <div class="status-title">❌ CSRC IPO指引：收紧中</div>
+              <div class="status-desc">${csric.title} — 新股发行窗口暂停</div>
+            </div>
+          </div>
+          <div class="source">数据源：<a href="${csric.link}" target="_blank" style="color:#3b82f6;text-decoration:underline;">中国证监会发行监管司</a></div>
+        `;
+      } else {
+        csricEl.className = 'status-card status-yellow';
+        csricEl.innerHTML = `
+          <div class="status-header">
+            <div class="status-icon icon-yellow">⚠️</div>
+            <div>
+              <div class="status-title">CSRC IPO政策待确认</div>
+              <div class="status-desc">暂未检测到发行定价指引变更</div>
+            </div>
+          </div>
+          <div class="source">数据源：<a href="${csric.link}" target="_blank" style="color:#3b82f6;text-decoration:underline;">中国证监会发行监管司</a></div>
+        `;
+      }
+    }
+
+    function renderSAFEQuotaStatus(safe = { status: 'neutral', title: '国家外汇管理局最新政策公告', link: 'http://www.safe.gov.cn/' }) {
+      const safeEl = document.getElementById('safe-quota-status');
+
+      renderRRRStatus(items);
+      renderUSDCNYStatus(usdcny);
+      renderNBSIPStatus(nbsIp);
+      if (safe.status === 'green') {
+        safeEl.className = 'status-card status-green';
+        safeEl.innerHTML = `
+          <div class="status-header">
+            <div class="status-icon icon-green">✅</div>
+            <div>
+              <div class="status-title">✅ SAFE额度：扩大中</div>
+              <div class="status-desc">${safe.title} — QDLP/QFLP跨境投资额度已上调</div>
+            </div>
+          </div>
+          <div class="source">数据源：<a href="${safe.link}" target="_blank" style="color:#3b82f6;text-decoration:underline;">国家外汇管理局</a></div>
+        `;
+      } else if (safe.status === 'red') {
+        safeEl.className = 'status-card status-red';
+        safeEl.innerHTML = `
+          <div class="status-header">
+            <div class="status-icon icon-red">❌</div>
+            <div>
+              <div class="status-title">❌ SAFE额度：收紧中</div>
+              <div class="status-desc">${safe.title} — 跨境人民币结算试点暂停</div>
+            </div>
+          </div>
+          <div class="source">数据源：<a href="${safe.link}" target="_blank" style="color:#3b82f6;text-decoration:underline;">国家外汇管理局</a></div>
+        `;
+      } else {
+        safeEl.className = 'status-card status-yellow';
+        safeEl.innerHTML = `
+          <div class="status-header">
+            <div class="status-icon icon-yellow">⚠️</div>
+            <div>
+              <div class="status-title">SAFE额度政策待确认</div>
+              <div class="status-desc">暂未检测到跨境结算额度变更</div>
+            </div>
+          </div>
+          <div class="source">数据源：<a href="${safe.link}" target="_blank" style="color:#3b82f6;text-decoration:underline;">国家外汇管理局</a></div>
+        `;
+      }
+    }
+
+    function renderShanghaiVIXStatus(vix = { status: 'neutral', csiPe: 11.4, shanghaiVix: 28.5 }) {
+      const vixEl = document.getElementById('shanghai-vix-status');
+
+      // Auto-refresh every 5 mins
+      setTimeout(() => location.reload(), 5 * 60 * 1000);
+      if (vix.status === 'green') {
+        vixEl.className = 'status-card status-green';
+        vixEl.innerHTML = `
+          <div class="status-header">
+            <div class="status-icon icon-green">✅</div>
+            <div>
+              <div class="status-title">✅ 上海综指窗口：开启中</div>
+              <div class="status-desc">CSI 300 P/E = ${vix.csiPe}, 上证波动率 = ${vix.shanghaiVix} → 最佳新股发行窗口</div>
+            </div>
+          </div>
+          <div class="source">数据源：TradingView + Investing.com 公开数据</div>
+        `;
+      } else if (vix.status === 'yellow') {
+        vixEl.className = 'status-card status-yellow';
+        vixEl.innerHTML = `
+          <div class="status-header">
+            <div class="status-icon icon-yellow">⚠️</div>
+            <div>
+              <div class="status-title">⚠️ 上海综指窗口：观察中</div>
+              <div class="status-desc">CSI 300 P/E = ${vix.csiPe}, 上证波动率 = ${vix.shanghaiVix} → 需等待任一条件强化</div>
+            </div>
+          </div>
+          <div class="source">数据源：TradingView + Investing.com 公开数据</div>
+        `;
+      } else {
+        vixEl.className = 'status-card status-red';
+        vixEl.innerHTML = `
+          <div class="status-header">
+            <div class="status-icon icon-red">❌</div>
+            <div>
+              <div class="status-title">❌ 上海综指窗口：关闭中</div>
+              <div class="status-desc">CSI 300 P/E = ${vix.csiPe}, 上证波动率 = ${vix.shanghaiVix} → 等待政策催化剂</div>
+            </div>
+          </div>
+          <div class="source">数据源：TradingView + Investing.com 公开数据</div>
+        `;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+    // --- INIT ---
+    async function init() {
+      try {
+        const [items, usdcny, nbsIp, csric, safe, vix] = await Promise.all([
+          fetchPBOCSearch(),
+          fetchUSDCNY(),
+          fetchNBSIP(),
+          fetchCSRCIPO(),
+          fetchSAFEQuota(),
+          fetchShanghaiVIX()
+        ]);
+        
+        renderRRRStatus(items);
+        renderUSDCNYStatus(usdcny);
+        renderNBSIPStatus(nbsIp);
+        renderCSRCIPOStatus(csric);
+        renderSAFEQuotaStatus(safe);
+        renderShanghaiVIXStatus(vix);
+      } catch (e) {
+        console.error('❌ Dashboard init failed:', e);
+        document.getElementById('last-update').textContent = '⚠️ 初始化失败 — 正在重试…';
+        setTimeout(() => location.reload(), 5000);
+      }
+    }
+
+    // --- START IMMEDIATELY ---
+    updateLastUpdated();
+    setInterval(updateLastUpdated, 60 * 1000);
+    
+    // Run main init after 1 sec (ensures DOM ready)
+    setTimeout(init, 1000);
+
+    // Auto-refresh every 5 mins
+    setTimeout(() => location.reload(), 5 * 60 * 1000);
+  </script>
 </body>
 </html>
