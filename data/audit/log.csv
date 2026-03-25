@@ -1,2 +1,6 @@
 timestamp,url,status,age_seconds,error
 2026-03-25T10:51:10.705215,https://api.exchangerate-api.com/v4/latest/USD,success,0,
+2026-03-25T11:16:57.829037,data/fx/latest.json,cache_hit,-27252.876512,
+2026-03-25T11:35:06.832249,data/fx/latest.json,cache_hit,-26163.873304,
+2026-03-25T11:46:16.917506,https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/index.html,success,0,
+2026-03-25T11:46:16.919627,https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/index.html,parse_error,0,Expecting value: line 1 column 1 (char 0)

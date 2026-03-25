@@ -1,1 +1,6 @@
 [OK] 2026-03-25T10:36:15.029033 | Test alert sent to Telegram (chat_id: 8545379026)
+[CONFIG ERROR] 2026-03-25T11:17:40.583483 | Telegram credentials not configured. Set TELEGRAM_TOKEN and TELEGRAM_CHAT_ID environment variables.
+[CONFIG ERROR] 2026-03-25T11:29:08.045795 | Telegram credentials not configured. Set TELEGRAM_TOKEN and TELEGRAM_CHAT_ID environment variables.
+[CONFIG ERROR] 2026-03-25T11:29:24.971536 | Telegram credentials not configured. Set TELEGRAM_TOKEN and TELEGRAM_CHAT_ID environment variables.
+[ERROR] 2026-03-25T11:29:38.903447 | HTTPSConnectionPool(host='api.telegram.org', port=443): Max retries exceeded with url: /botYOUR_ACTUAL_TELEGRAM_TOKEN/sendMessage (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7240de9d3a70>: Failed to establish a new connection: [Errno 101] Network is unreachable'))
+[CONFIG ERROR] 2026-03-25T11:32:26.005923 | Telegram credentials not configured. Set TELEGRAM_TOKEN and TELEGRAM_CHAT_ID environment variables.
