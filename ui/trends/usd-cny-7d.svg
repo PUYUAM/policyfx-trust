@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" viewBox="0 0 800 200" font-family="sans-serif">
+  <style> .grid { stroke: #eee; stroke-width: 1; } .line { stroke: #2c3e50; stroke-width: 2; fill: none; } .label { font-size: 12px; fill: #666; } .title { font-size: 14px; font-weight: bold; fill: #2c3e50; }</style>
+  <!-- Grid lines -->
+  <line class="grid" x1="0" y1="180" x2="800" y2="180"/>
+  <line class="grid" x1="0" y1="140" x2="800" y2="140"/>
+  <line class="grid" x1="0" y1="100" x2="800" y2="100"/>
+  <line class="grid" x1="0" y1="60" x2="800" y2="60"/>
+  <line class="grid" x1="0" y1="20" x2="800" y2="20"/>
+  <!-- Axes -->
+  <line x1="0" y1="180" x2="800" y2="180" stroke="#34495e" stroke-width="1"/>
+  <!-- Data line (USD/CNY: 6.88 → 6.92) -->
+  <polyline class="line" points="0,120 114.3,118 228.6,116 342.9,114 457.1,112 571.4,110 685.7,108 800,106"/>
+  <!-- Labels -->
+  <text class="title" x="10" y="20">USD/CNY — Last 7 Days</text>
+  <text class="label" x="10" y="195">Mar 19</text>
+  <text class="label" x="124.3" y="195">Mar 20</text>
+  <text class="label" x="238.6" y="195">Mar 21</text>
+  <text class="label" x="352.9" y="195">Mar 22</text>
+  <text class="label" x="467.1" y="195">Mar 23</text>
+  <text class="label" x="581.4" y="195">Mar 24</text>
+  <text class="label" x="695.7" y="195">Mar 25</text>
+  <text class="label" x="720" y="110">6.92</text>
+  <text class="label" x="720" y="130">6.88</text>
+</svg>
