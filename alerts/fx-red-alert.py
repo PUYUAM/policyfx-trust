@@ -10,7 +10,8 @@ from datetime import datetime
 import requests
 
 # Configure
-SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/YOUR/WEBHOOK/HERE"  # ← REPLACE
+import os
+SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', 'YOUR_SLACK_WEBHOOK_URL_HERE')
 FX_DATA_PATH = "data/fx/latest.json"
 ALERT_THRESHOLD = 7.35
 LOG_PATH = "data/alerts/fx-red.log"
@@ -57,6 +58,13 @@ try:
         }
         
         # Send
+        if SLACK_WEBHOOK_URL == 'YOUR_SLACK_WEBHOOK_URL_HERE':
+            log_msg = f"[CONFIG ERROR] {now} | Slack webhook URL not configured. Set SLACK_WEBHOOK_URL environment variable."
+            print(log_msg)
+            with open(LOG_PATH, 'a') as f:
+                f.write(log_msg + '\n')
+            sys.exit(1)
+        
         res = requests.post(SLACK_WEBHOOK_URL, json=msg, timeout=10)
         if res.status_code == 200:
             log_msg = f"[OK] {now} | {rate:.3f} > {ALERT_THRESHOLD} → Slack alert sent"
