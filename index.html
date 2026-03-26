@@ -1,22 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Your Policy+FX Dashboard</title>
+  <title>政策+FX 监控仪表盘</title>
   <link rel="stylesheet" href="client.css">
   <style>
+    /* Comprehensive CSS for proper display */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f8f9fa;
+      color: #212529;
+      line-height: 1.6;
+      padding: 16px;
+      min-height: 100vh;
+      font-size: 16px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #343a40;
+    }
+    p {
+      font-size: 1.1rem;
+      color: #495057;
+      margin-bottom: 16px;
+    }
+    .status-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+    }
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+    .status-indicator::before {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .status-green::before { background: #28a745; }
+    .status-yellow::before { background: #ffc107; }
+    .status-red::before { background: #dc3545; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .metric-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: #495057;
+    }
+    .metric-card div {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 4px 0;
+    }
+    footer {
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid #dee2e6;
+      font-size: 0.875rem;
+      color: #6c757d;
+    }
     .compliance-badges { margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; }
     .compliance-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; }
     .verification-timestamps { margin-top: 12px; font-size: 0.75rem; color: #6c757d; }
+    
+    /* Chinese character support */
+    @font-face {
+      font-family: 'Chinese Font';
+      src: local('PingFang SC'), local('Hiragino Sans GB'), local('Microsoft YaHei'), local('sans-serif');
+    }
+    body, h1, h2, h3, p, div {
+      font-family: 'Chinese Font', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
       <img src="icons/logo.png" alt="Policy+FX Logo" width="120" style="margin-bottom: 16px;">
-      <h1>Your Policy+FX Dashboard</h1>
-      <p>Real-time央行政策 & USD/CNY monitoring — trusted, simple, secure</p>
+      <h1>政策+FX 监控仪表盘</h1>
+      <p>实时央行政策 & USD/CNY 监控 — 可信、简洁、安全</p>
     </header>
 
     <div class="status-card">
